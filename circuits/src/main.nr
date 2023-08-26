@@ -12,7 +12,6 @@ fn main(
   polynomial_commitment: pub Field,
   nullifier: pub [u8; 32],
 ) {
-  // Write your main logic here
   let (pub_key_x, pub_key_y) = array_helpers::split_u8_64_unconstrained(pub_key);
   let address = ecrecover::ecrecover(pub_key_x, pub_key_y, signature, hashed_message);
 

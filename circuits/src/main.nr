@@ -2,6 +2,7 @@ global CANDIDATES: Field = 2;
 
 use dep::std;
 use dep::ecrecover;
+use dep::array_helpers;
 
 fn main(
   pub_key: [u8; 64],
@@ -12,10 +13,15 @@ fn main(
   nullifier: pub [u8; 32],
 ) {
   // Write your main logic here
+  let (pub_key_x, pub_key_y) = array_helpers::split_u8_64_unconstrained(pub_key);
+  let address = ecrecover::ecrecover(pub_key_x, pub_key_y, signature, hashed_message);
+  std::println(f"address: {address}");
+  // let hash = std::hash::pedersen(x);
 }
 
 fn evaluate_polynomial(polynomial: [Field; CANDIDATES + 1], x: Field) -> Field {
   // Write logic to evaluate polynomial here
+  polynomial[x]
 }
 
 #[test]

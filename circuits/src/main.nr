@@ -15,13 +15,24 @@ fn main(
   // Write your main logic here
   let (pub_key_x, pub_key_y) = array_helpers::split_u8_64_unconstrained(pub_key);
   let address = ecrecover::ecrecover(pub_key_x, pub_key_y, signature, hashed_message);
-  std::println(f"address: {address}");
-  // let hash = std::hash::pedersen(x);
+
+  assert(std::hash::pedersen(polynomial)[0] == polynomial_commitment);
+
+  let evaluation = evaluate_polynomial(polynomial, address);
+  assert(evaluation == 0);
+
+  let signature_hash = std::hash::blake2s(signature);
+  assert(signature_hash == nullifier);
 }
 
 fn evaluate_polynomial(polynomial: [Field; CANDIDATES + 1], x: Field) -> Field {
-  // Write logic to evaluate polynomial here
-  polynomial[x]
+  let mut mult = 1;
+  let mut evaluation = 0;
+  for i in 0..polynomial.len() {
+    evaluation = (mult * polynomial[i] + evaluation);
+    mult = mult * x;
+  }
+  evaluation
 }
 
 #[test]
